@@ -101,11 +101,9 @@ function downloadData(page = 1, mode = 'default') {
     let perPage = document.querySelector('.per-page-btn').value;
     url.searchParams.append('page', page);
     url.searchParams.append('per-page', perPage);
-    if (mode == 'search') {
-        const searchInput = document.querySelector('.search-field');
-        const searchQuery = searchInput.value.trim();
-        url.searchParams.append('q', searchQuery);
-    }
+    const searchInput = document.querySelector('.search-field');
+    const searchQuery = searchInput.value.trim();
+    url.searchParams.append('q', searchQuery);
     let xhr = new XMLHttpRequest();
     xhr.open('GET', url);
     xhr.responseType = 'json';
@@ -118,12 +116,12 @@ function downloadData(page = 1, mode = 'default') {
 }
 
 function perPageBtnHandler(event) {
-    downloadData(1);
+    downloadData(1,'search');
 }
 
 function pageBtnHandler(event) {
     if (event.target.dataset.page) {
-        downloadData(event.target.dataset.page);
+        downloadData(event.target.dataset.page,'search');
         window.scrollTo(0, 0);
     }
 }
@@ -133,29 +131,24 @@ function searchButtonHandler() {
 }
 
 
-// eslint-disable-next-line max-len
+
 document.querySelector('.search-field').addEventListener('input', function (event) {
     const searchQuery = event.target.value.trim();
 
     if (searchQuery.length > 0) {
-        // eslint-disable-next-line no-use-before-define
         fetchAutocompleteSuggestions(searchQuery)
             .then((suggestions) => {
                 if (Array.isArray(suggestions)) {
-                    // eslint-disable-next-line no-use-before-define
                     showAutocompleteSuggestions();
-                    // eslint-disable-next-line no-use-before-define
                     displayAutocompleteSuggestions(suggestions);
                 }
             });
     } else {
-        // eslint-disable-next-line no-use-before-define
         hideAutocompleteSuggestions();
     }
 });
 
 function fetchAutocompleteSuggestions(query) {
-    // eslint-disable-next-line max-len
     const apiUrl = 'http://cat-facts-api.std-900.ist.mospolytech.ru/autocomplete';
     const url = new URL(apiUrl);
     url.searchParams.append('q', query);
@@ -179,7 +172,6 @@ function displayAutocompleteSuggestions(suggestions) {
         listItem.textContent = suggestion;
         listItem.addEventListener('click', () => {
             document.querySelector('.search-field').value = suggestion;
-            // eslint-disable-next-line no-use-before-define
             hideAutocompleteSuggestions();
         });
         suggestionsList.appendChild(listItem);
@@ -205,4 +197,3 @@ window.onload = function () {
 
     document.querySelector('.search-btn').onclick = searchButtonHandler;
 };
-
